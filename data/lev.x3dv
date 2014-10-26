@@ -1,0 +1,20 @@
+#X3D V3.2 utf8
+PROFILE Interchange
+
+# Camera settings "encoded" in the VRML/X3D declaration below :
+# direction -1.9555907580447141E-16 -1.6420282136357959E-15 -1
+# up 0 1 4.3711388286737929E-8
+# gravityUp 0 1 0
+Viewpoint {
+  position 5 1.2515100240707397 15.255277633666992
+  orientation 0 0 1 0
+}
+
+KambiNavigationInfo {
+  type [ "WALK", "ANY" ]
+#  avatarSize [ 0.3 0.8 ]
+  speed 3
+  headlight FALSE
+}
+
+Inline { url "lev.x3d" }
