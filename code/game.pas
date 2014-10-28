@@ -26,10 +26,8 @@ var
 implementation
 
 uses SysUtils, CastleLog, CastleWindow, CastleProgress, CastleWindowProgress,
-  CastleControls, CastlePrecalculatedAnimation, CastleGLImages, CastleConfig,
-  CastleImages, CastleFilesUtils, CastleKeysMouse, CastleUtils, CastleScene,
-  CastleMaterialProperties, CastleResources, CastleGameNotifications, CastleNotifications,
-  CastleSceneCore, Castle3D, CastleVectors, CastleMessages;
+  CastleControls, CastleFilesUtils, CastleKeysMouse, CastleScene,
+  CastleUIControls, Castle3D, CastleVectors, CastleMessages, CastleColors;
 
 const
   CX = 12;
@@ -42,13 +40,19 @@ const
 var
   Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
   Player: T3DTransform;
+  HelpLabel: TCastleLabel;
 
 { One-time initialization. }
 procedure ApplicationInitialize;
 begin
   Progress.UserInterface := WindowProgressInterface;
-
   Levels.AddFromFile(ApplicationData('level.xml'));
+
+  HelpLabel := TCastleLabel.Create(Window);
+  HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
+  HelpLabel.Frame := false;
+  HelpLabel.Color := Red;
+  Window.Controls.InsertFront(HelpLabel);
 end;
 
 procedure WindowOpen(Container: TUIContainer);
@@ -80,6 +84,8 @@ end;
 
 procedure WindowResize(Container: TUIContainer);
 begin
+  HelpLabel.AlignVertical(prTop, prTop);;
+  HelpLabel.AlignHorizontal;
 end;
 
 procedure WindowUpdate(Container: TUIContainer);
