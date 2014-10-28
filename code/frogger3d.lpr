@@ -1,12 +1,12 @@
 {
   Copyright 2014-2014 Michalis Kamburelis.
 
-  This file is part of "Frog3d".
+  This file is part of "Frogger 3D".
 
-  "Frog3d" is free software; see the file COPYING.txt,
+  "Frogger 3D" is free software; see the file COPYING.txt,
   included in this distribution, for details about the copyright.
 
-  "Frog3d" is distributed in the hope that it will be useful,
+  "Frogger 3D" is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -15,11 +15,11 @@
 
 {$apptype CONSOLE}
 
-{ "Frog3d" standalone game binary. }
-program frog3d;
+{ "Frogger 3D" standalone game binary. }
+program frogger3d;
 uses CastleWindow, CastleConfig, CastleParameters, CastleLog, CastleUtils,
   CastleSoundEngine, CastleClassUtils,
-  Game, GameWindow;
+  Game;
 
 const
   Version = '1.0.0';

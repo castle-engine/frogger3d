@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="frog3d"
-  standalone_source="code/frog3d.lpr"
-  android_source="code/frog3d_android.lpr">
+<project name="frogger3d"
+  standalone_source="code/frogger3d.lpr"
+  android_source="code/frogger3d_android.lpr">
   <version executable_option="--version" />
   <package>
     <include path="COPYING.GPL2.txt" />
