@@ -63,7 +63,13 @@ procedure WindowOpen(Container: TUIContainer);
 var
   CylinderScene, PlayerScene: TCastleScene;
   X, Z: Integer;
+  FpsPlayer: TPlayer; // representation of FPS camera
 begin
+  FpsPlayer := TPlayer.Create(SceneManager);
+  SceneManager.Items.Add(FpsPlayer);
+  SceneManager.Player := FpsPlayer;
+  FpsPlayer.Blocked := true; // do not allow to move player in this game
+
   SceneManager.LoadLevel('1');
 
   CylinderScene := TCastleScene.Create(SceneManager);
