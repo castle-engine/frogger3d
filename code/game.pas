@@ -53,26 +53,27 @@ end;
 
 procedure WindowOpen(Container: TUIContainer);
 var
-  Scene: TCastleScene;
+  CylinderScene, PlayerScene: TCastleScene;
   X, Z: Integer;
 begin
   Window.SceneManager.LoadLevel('1');
 
+  CylinderScene := TCastleScene.Create(Window.SceneManager);
+  CylinderScene.Load(ApplicationData('cyl.x3d'), true);
+
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      Scene := TCastleScene.Create(Window.SceneManager);
-      Scene.Load(ApplicationData('cyl.x3d'), true);
       Cyls[X, Z] := T3DTransform.Create(Window.SceneManager);
-      Cyls[X, Z].Add(Scene);
+      Cyls[X, Z].Add(CylinderScene);
       Cyls[X, Z].Translation := Vector3Single(X * XSpread, 0, Z * ZSpread - 50);
       Window.SceneManager.Items.Add(Cyls[X, Z]);
     end;
 
-  Scene := TCastleScene.Create(Window.SceneManager);
-  Scene.Load(ApplicationData('p.x3d'), true);
+  PlayerScene := TCastleScene.Create(Window.SceneManager);
+  PlayerScene.Load(ApplicationData('p.x3d'), true);
   Player := T3DTransform.Create(Window.SceneManager);
-  Player.Add(Scene);
+  Player.Add(PlayerScene);
   Player.Translation := Vector3Single(-1, 0.5, 0);
   Window.SceneManager.Items.Add(Player);
 end;
