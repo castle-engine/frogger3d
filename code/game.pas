@@ -42,6 +42,7 @@ var
   Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
   Player: T3DTransform;
   HelpLabel: TCastleLabel;
+  CylinderZMin, CylinderZMax: Single;
 
 { One-time initialization. }
 procedure ApplicationInitialize;
@@ -73,9 +74,14 @@ begin
     begin
       Cylinders[X, Z] := T3DTransform.Create(SceneManager);
       Cylinders[X, Z].Add(CylinderScene);
-      Cylinders[X, Z].Translation := Vector3Single(X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
+      Cylinders[X, Z].Translation := Vector3Single(
+        X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
       SceneManager.Items.Add(Cylinders[X, Z]);
     end;
+
+  { initial cylinder min/max define the span where cylinders can be in z }
+  CylinderZMin := Cylinders[0,      0].Translation[2];
+  CylinderZMax := Cylinders[0, CZ - 1].Translation[2];
 
   PlayerScene := TCastleScene.Create(SceneManager);
   PlayerScene.Load(ApplicationData('player.x3d'), true);
@@ -104,6 +110,12 @@ begin
     begin
       T := Cylinders[X, Z].Translation;
       T[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
+      { force the cylinder to fit in CylinderZMin/Max zone.
+        This makes seemingly infinite cylinders }
+      while T[2] > CylinderZMax do
+        T[2] -= (CylinderZMax - CylinderZMin);
+      while T[2] < CylinderZMin do
+        T[2] += (CylinderZMax - CylinderZMin);
       Cylinders[X, Z].Translation := T;
     end;
 
