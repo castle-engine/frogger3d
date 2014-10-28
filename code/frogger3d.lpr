@@ -22,7 +22,7 @@ uses CastleWindow, CastleConfig, CastleParameters, CastleLog, CastleUtils,
   Game;
 
 const
-  Version = '1.0.0';
+  Version = '1.1.0';
   Options: array [0..0] of TOption = (
     (Short: 'v'; Long: 'version'; Argument: oaNone)
   );
@@ -41,6 +41,9 @@ end;
 
 begin
   Config.Load;
+
+  Window.ShadowVolumes := true; // not necessary, this is true by default
+  Window.StencilBits := 8;
 
   SoundEngine.ParseParameters; { after Config.Load, to be able to turn off sound }
   Window.FullScreen := true;

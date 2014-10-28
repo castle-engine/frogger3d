@@ -1,0 +1,18 @@
+0307 035x2 sfd02.png
+130713 089x2 scb01.png
+from
+http://opengameart.org/content/terrainssandpack01zip
+Author: Duion
+License(s): CC-BY 3.0
+
+water1.png
+from
+http://opengameart.org/content/water-textures
+Author: unirail
+License(s): CC-BY 3.0
+
+wood1.jpg
+from
+http://opengameart.org/content/wood-texture-tiles
+Author: JCW
+License(s): CC0

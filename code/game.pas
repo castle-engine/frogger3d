@@ -38,6 +38,7 @@ const
   ZSpread = 4;
 
 var
+  SceneManager: TGameSceneManager; //< same as Window.SceneManager, just comfortable shortcut
   Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
   Player: T3DTransform;
   HelpLabel: TCastleLabel;
@@ -45,6 +46,8 @@ var
 { One-time initialization. }
 procedure ApplicationInitialize;
 begin
+  SceneManager := Window.SceneManager;
+
   Progress.UserInterface := WindowProgressInterface;
   Levels.AddFromFile(ApplicationData('level.xml'));
 
@@ -60,26 +63,27 @@ var
   CylinderScene, PlayerScene: TCastleScene;
   X, Z: Integer;
 begin
-  Window.SceneManager.LoadLevel('1');
+  SceneManager.LoadLevel('1');
 
-  CylinderScene := TCastleScene.Create(Window.SceneManager);
-  CylinderScene.Load(ApplicationData('cyl.x3d'), true);
+  CylinderScene := TCastleScene.Create(SceneManager);
+  CylinderScene.Load(ApplicationData('cylinder.x3d'), true);
 
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      Cylinders[X, Z] := T3DTransform.Create(Window.SceneManager);
+      Cylinders[X, Z] := T3DTransform.Create(SceneManager);
       Cylinders[X, Z].Add(CylinderScene);
-      Cylinders[X, Z].Translation := Vector3Single(X * XSpread, 0, Z * ZSpread - 50);
-      Window.SceneManager.Items.Add(Cylinders[X, Z]);
+      Cylinders[X, Z].Translation := Vector3Single(X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
+      SceneManager.Items.Add(Cylinders[X, Z]);
     end;
 
-  PlayerScene := TCastleScene.Create(Window.SceneManager);
-  PlayerScene.Load(ApplicationData('p.x3d'), true);
-  Player := T3DTransform.Create(Window.SceneManager);
+  PlayerScene := TCastleScene.Create(SceneManager);
+  PlayerScene.Load(ApplicationData('player.x3d'), true);
+  Player := T3DTransform.Create(SceneManager);
   Player.Add(PlayerScene);
-  Player.Translation := Vector3Single(-1, 0.5, 0);
-  Window.SceneManager.Items.Add(Player);
+  Player.Translation := Vector3Single(- CX * XSpread / 2 - 1, 0.5, 0);
+  Player.Rotation := Vector4Single(0, 1, 0, -Pi / 2);
+  SceneManager.Items.Add(Player);
 end;
 
 procedure WindowResize(Container: TUIContainer);

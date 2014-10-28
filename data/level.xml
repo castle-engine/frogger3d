@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <level
   name="1"
-  scene="lev.x3dv"
+  scene="level.x3dv"
   title="1"
   number="1"
   type="Level"
   placeholders="blender"
+  loading_image="loading_image/frogger5200Screen_filtered.png"
 >
 </level>
