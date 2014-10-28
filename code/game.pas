@@ -40,7 +40,7 @@ const
   ZSpread = 4;
 
 var
-  Cyls: array [0..CX-1, 0..CZ-1] of T3DTransform;
+  Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
   Player: T3DTransform;
 
 { One-time initialization. }
@@ -64,10 +64,10 @@ begin
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      Cyls[X, Z] := T3DTransform.Create(Window.SceneManager);
-      Cyls[X, Z].Add(CylinderScene);
-      Cyls[X, Z].Translation := Vector3Single(X * XSpread, 0, Z * ZSpread - 50);
-      Window.SceneManager.Items.Add(Cyls[X, Z]);
+      Cylinders[X, Z] := T3DTransform.Create(Window.SceneManager);
+      Cylinders[X, Z].Add(CylinderScene);
+      Cylinders[X, Z].Translation := Vector3Single(X * XSpread, 0, Z * ZSpread - 50);
+      Window.SceneManager.Items.Add(Cylinders[X, Z]);
     end;
 
   PlayerScene := TCastleScene.Create(Window.SceneManager);
@@ -92,23 +92,23 @@ begin
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      T := Cyls[X, Z].Translation;
+      T := Cylinders[X, Z].Translation;
       T[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
-      Cyls[X, Z].Translation := T;
+      Cylinders[X, Z].Translation := T;
     end;
 
   PlayerX := Player.Translation[0];
   PlayerZ := Player.Translation[2];
   for X := 0 to CX - 1 do
   begin
-    CylinderX := Cyls[X, 0].Translation[0];
+    CylinderX := Cylinders[X, 0].Translation[0];
     if FloatsEqual(PlayerX, CylinderX, 0.1) then
     begin
       Some := false;
       for Z := 0 to CZ - 1 do
       begin
-        if (PlayerZ >= Cyls[X, Z].Translation[2] - 1) and
-           (PlayerZ <= Cyls[X, Z].Translation[2] + 1) then
+        if (PlayerZ >= Cylinders[X, Z].Translation[2] - 1) and
+           (PlayerZ <= Cylinders[X, Z].Translation[2] + 1) then
         begin
           Some := true;
 
@@ -125,7 +125,7 @@ begin
     end;
   end;
 
-  if PlayerX > Cyls[CX - 1, 0].Translation[0] + 0.1 then
+  if PlayerX > Cylinders[CX - 1, 0].Translation[0] + 0.1 then
   begin
     MessageOk(Window, 'Game win');
     Application.Quit;
