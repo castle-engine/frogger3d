@@ -1,9 +1,0 @@
-fix to not accidentally move when pressing arrow keys,
-why
-  FpsPlayer: TPlayer; // representation of FPS camera
-
-  FpsPlayer := TPlayer.Create(SceneManager);
-  SceneManager.Items.Add(FpsPlayer);
-  SceneManager.Player := FpsPlayer;
-  FpsPlayer.Blocked := true; // do not allow to move player in this game
-or "NONE" does not work as it should?
