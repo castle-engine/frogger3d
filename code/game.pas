@@ -132,26 +132,45 @@ begin
   end;
 end;
 
+procedure PlayerShift(const X, Z: Single);
+begin
+  Player.Translation := Player.Translation + Vector3Single(X * XSpread / 2, 0, Z * 0.2);
+end;
+
 procedure WindowPress(Container: TUIContainer; const Event: TInputPressRelease);
-
-  procedure PlayerShift(const X, Z: Single);
-  begin
-    Player.Translation := Player.Translation + Vector3Single(X, 0, Z);
-  end;
-
+const
+  BorderArea = 0.25;
+var
+  BorderLeft, BorderRight, BorderTop, BorderBottom: boolean;
 begin
   if Event.IsKey(K_F5) then
     Window.SaveScreen(FileNameAutoInc(ApplicationName + '_screen_%d.png'));
   if Event.IsKey(K_Escape) then
     Application.Quit;
-  if Event.IsKey(K_A) then
-    PlayerShift(0, -0.2);
-  if Event.IsKey(K_D) then
-    PlayerShift(0,  0.2);
   if Event.IsKey(K_W) then
-    PlayerShift( XSpread / 2, 0);
+    PlayerShift(0, -1);
   if Event.IsKey(K_S) then
-    PlayerShift(-XSpread / 2, 0);
+    PlayerShift(0,  1);
+  if Event.IsKey(K_D) then
+    PlayerShift( 1, 0);
+  if Event.IsKey(K_A) then
+    PlayerShift(-1, 0);
+
+  if Event.IsMouseButton(mbLeft) then
+  begin
+    BorderLeft   := Event.Position[0] < BorderArea * Container.Width;
+    BorderRight  := Event.Position[0] > Container.Width - BorderArea * Container.Width;
+    BorderBottom := Event.Position[1] < BorderArea * Container.Height;
+    BorderTop    := Event.Position[1] > Container.Height - BorderArea * Container.Height;
+    if BorderTop    and (not BorderLeft) and (not BorderRight) then
+      PlayerShift(0, -1);
+    if BorderBottom and (not BorderLeft) and (not BorderRight) then
+      PlayerShift(0,  1);
+    if BorderRight  and (not BorderBottom) and (not BorderTop) then
+      PlayerShift( 1, 0);
+    if BorderLeft   and (not BorderBottom) and (not BorderTop) then
+      PlayerShift(-1, 0);
+  end;
 end;
 
 function MyGetApplicationName: string;
