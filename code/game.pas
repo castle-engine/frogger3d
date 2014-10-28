@@ -39,10 +39,13 @@ const
 
 var
   SceneManager: TGameSceneManager; //< same as Window.SceneManager, just comfortable shortcut
+  CylinderScene, PlayerScene: TCastleScene;
   Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
   Player: T3DTransform;
+
   HelpLabel: TCastleLabel;
   CylinderZMin, CylinderZMax: Single;
+  FpsPlayer: TPlayer; // representation of FPS camera
 
 { One-time initialization. }
 procedure ApplicationInitialize;
@@ -59,12 +62,27 @@ begin
   Window.Controls.InsertFront(HelpLabel);
 end;
 
-procedure WindowOpen(Container: TUIContainer);
+procedure GameStart;
+
+  { Be sure to clean resources from previous game, to not clog memory. }
+  procedure GameEnd;
+  var
+    X, Z: Integer;
+  begin
+    FreeAndNil(FpsPlayer);
+    for X := 0 to CX - 1 do
+      for Z := 0 to CZ - 1 do
+        FreeAndNil(Cylinders[X, Z]);
+    FreeAndNil(Player);
+    FreeAndNil(PlayerScene);
+    FreeAndNil(CylinderScene);
+  end;
+
 var
-  CylinderScene, PlayerScene: TCastleScene;
   X, Z: Integer;
-  FpsPlayer: TPlayer; // representation of FPS camera
 begin
+  GameEnd;
+
   FpsPlayer := TPlayer.Create(SceneManager);
   SceneManager.Items.Add(FpsPlayer);
   SceneManager.Player := FpsPlayer;
@@ -96,6 +114,11 @@ begin
   Player.Translation := Vector3Single(- CX * XSpread / 2 - 1, 0.5, 0);
   Player.Rotation := Vector4Single(0, 1, 0, -Pi / 2);
   SceneManager.Items.Add(Player);
+end;
+
+procedure WindowOpen(Container: TUIContainer);
+begin
+  GameStart;
 end;
 
 procedure WindowResize(Container: TUIContainer);
@@ -147,16 +170,16 @@ begin
       end;
       if not Some then
       begin
-        MessageOk(Window, 'Dead, game over');
-        Application.Quit;
+        MessageOk(Window, 'You are dead, game over.');
+        GameStart;
       end;
     end;
   end;
 
   if PlayerX > Cylinders[CX - 1, 0].Translation[0] + 0.1 then
   begin
-    MessageOk(Window, 'Game win');
-    Application.Quit;
+    MessageOk(Window, 'Congratulations, you win!');
+    GameStart;
   end;
 end;
 

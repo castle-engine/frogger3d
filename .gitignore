@@ -5,3 +5,10 @@ frogger3d
 frogger3d.exe
 *.blend1
 *.blend2
+android/assets/
+android/bin/
+android/libs/
+android/local.properties
+android/proguard-project.txt
+android/res/drawable-*/
+code/libfrogger3d_android.so
