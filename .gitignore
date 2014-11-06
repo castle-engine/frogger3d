@@ -13,3 +13,6 @@ android/proguard-project.txt
 android/res/drawable-*/
 code/libfrogger3d_android.so
 android/ant.properties
+automatic-windows-resources.rc
+automatic-windows.manifest
+*.or

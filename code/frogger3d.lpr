@@ -13,10 +13,15 @@
   ----------------------------------------------------------------------------
 }
 
-{$apptype CONSOLE}
+{$apptype GUI}
 
 { "Frogger 3D" standalone game binary. }
 program frogger3d;
+
+{$ifdef MSWINDOWS}
+  {$R ../automatic-windows-resources.res}
+{$endif MSWINDOWS}
+
 uses CastleWindow, CastleConfig, CastleParameters, CastleLog, CastleUtils,
   CastleSoundEngine, CastleClassUtils,
   Game;
