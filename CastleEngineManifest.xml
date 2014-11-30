@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="frogger3d"
+  caption="Frogger 3D"
+  qualified_name="net.sourceforge.castleengine.frogger3d"
   standalone_source="code/frogger3d.lpr"
   android_source="code/frogger3d_android.lpr"
   author="Michalis Kamburelis">
   <icons>
     <icon path="store-graphics/icon.ico" />
+    <icon path="store-graphics/icon.png" />
   </icons>
-  <version name="1.1.0" />
+  <version value="1.1.0" code="3" />
   <package>
     <include path="COPYING.GPL2.txt" />
   </package>
