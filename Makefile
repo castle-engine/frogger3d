@@ -21,3 +21,8 @@ release-linux:
 .PHONY: release-src
 release-src:
 	castle-engine package-source
+
+.PHONY: release-android
+release-android:
+	castle-engine package --os=android --cpu=arm
+	castle-engine install --os=android --cpu=arm
