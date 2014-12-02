@@ -16,3 +16,4 @@ android/ant.properties
 automatic-windows-resources.rc
 automatic-windows.manifest
 *.or
+*.apk
