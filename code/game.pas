@@ -47,21 +47,6 @@ var
   CylinderZMin, CylinderZMax: Single;
   FpsPlayer: TPlayer; // representation of FPS camera
 
-{ One-time initialization. }
-procedure ApplicationInitialize;
-begin
-  SceneManager := Window.SceneManager;
-
-  Progress.UserInterface := WindowProgressInterface;
-  Levels.AddFromFile(ApplicationData('level.xml'));
-
-  HelpLabel := TCastleLabel.Create(Window);
-  HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
-  HelpLabel.Frame := false;
-  HelpLabel.Color := Red;
-  Window.Controls.InsertFront(HelpLabel);
-end;
-
 procedure GameStart;
 
   { Be sure to clean resources from previous game, to not clog memory. }
@@ -116,8 +101,20 @@ begin
   SceneManager.Items.Add(Player);
 end;
 
-procedure WindowOpen(Container: TUIContainer);
+{ One-time initialization. }
+procedure ApplicationInitialize;
 begin
+  SceneManager := Window.SceneManager;
+
+  Progress.UserInterface := WindowProgressInterface;
+  Levels.AddFromFile(ApplicationData('level.xml'));
+
+  HelpLabel := TCastleLabel.Create(Window);
+  HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
+  HelpLabel.Frame := false;
+  HelpLabel.Color := Red;
+  Window.Controls.InsertFront(HelpLabel);
+
   GameStart;
 end;
 
@@ -238,7 +235,6 @@ initialization
 
   { create Window and initialize Window callbacks }
   Window := TCastleWindowTouch.Create(Application);
-  Window.OnOpen := @WindowOpen;
   Window.OnPress := @WindowPress;
   Window.OnUpdate := @WindowUpdate;
   Window.OnResize := @WindowResize;
