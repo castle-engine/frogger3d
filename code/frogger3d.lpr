@@ -38,14 +38,14 @@ begin
   case OptionNum of
     0: begin
          WritelnStr(Version);
-         ProgramBreak;
+         Halt;
        end;
     else raise EInternalError.Create('OptionProc');
   end;
 end;
 
 begin
-  Config.Load;
+  UserConfig.Load;
 
   Window.ShadowVolumes := true; // not necessary, this is true by default
   Window.StencilBits := 8;
@@ -61,5 +61,5 @@ begin
   {$endif}
 
   Window.OpenAndRun;
-  Config.Save;
+  UserConfig.Save;
 end.

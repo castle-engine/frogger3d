@@ -113,15 +113,11 @@ begin
   HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
   HelpLabel.Frame := false;
   HelpLabel.Color := Red;
+  HelpLabel.Anchor(vpTop);
+  HelpLabel.Anchor(hpMiddle);
   Window.Controls.InsertFront(HelpLabel);
 
   GameStart;
-end;
-
-procedure WindowResize(Container: TUIContainer);
-begin
-  HelpLabel.AlignVertical(prTop, prTop);;
-  HelpLabel.AlignHorizontal;
 end;
 
 procedure WindowUpdate(Container: TUIContainer);
@@ -194,7 +190,7 @@ begin
   if Event.IsKey(K_F5) then
     Window.SaveScreen(FileNameAutoInc(ApplicationName + '_screen_%d.png'));
   if Event.IsKey(K_Escape) then
-    Application.Quit;
+    Application.Terminate;
   if Event.IsKey(K_W) then
     PlayerShift(0, -1);
   if Event.IsKey(K_S) then
@@ -237,7 +233,6 @@ initialization
   Window := TCastleWindowTouch.Create(Application);
   Window.OnPress := @WindowPress;
   Window.OnUpdate := @WindowUpdate;
-  Window.OnResize := @WindowResize;
   Window.FpsShowOnCaption := true;
   Application.MainWindow := Window;
 end.
