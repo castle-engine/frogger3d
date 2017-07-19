@@ -25,7 +25,8 @@ var
 
 implementation
 
-uses SysUtils, CastleLog, CastleWindow, CastleProgress, CastleWindowProgress,
+uses SysUtils, Math,
+  CastleLog, CastleWindow, CastleProgress, CastleWindowProgress,
   CastleControls, CastleFilesUtils, CastleKeysMouse, CastleScene,
   CastleUIControls, Castle3D, CastleVectors, CastleMessages, CastleColors;
 
@@ -83,7 +84,7 @@ begin
     begin
       Cylinders[X, Z] := T3DTransform.Create(SceneManager);
       Cylinders[X, Z].Add(CylinderScene);
-      Cylinders[X, Z].Translation := Vector3Single(
+      Cylinders[X, Z].Translation := Vector3(
         X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
       SceneManager.Items.Add(Cylinders[X, Z]);
     end;
@@ -96,8 +97,8 @@ begin
   PlayerScene.Load(ApplicationData('player.x3d'), true);
   Player := T3DTransform.Create(SceneManager);
   Player.Add(PlayerScene);
-  Player.Translation := Vector3Single(- CX * XSpread / 2 - 1, 0.5, 0);
-  Player.Rotation := Vector4Single(0, 1, 0, -Pi / 2);
+  Player.Translation := Vector3(- CX * XSpread / 2 - 1, 0.5, 0);
+  Player.Rotation := Vector4(0, 1, 0, -Pi / 2);
   SceneManager.Items.Add(Player);
 end;
 
@@ -123,7 +124,7 @@ end;
 procedure WindowUpdate(Container: TUIContainer);
 var
   X, Z: Integer;
-  T: TVector3Single;
+  T: TVector3;
   PlayerX, CylinderX, PlayerZ: Single;
   Some: boolean;
 begin
@@ -131,13 +132,13 @@ begin
     for Z := 0 to CZ - 1 do
     begin
       T := Cylinders[X, Z].Translation;
-      T[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
+      T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
       { force the cylinder to fit in CylinderZMin/Max zone.
         This makes seemingly infinite cylinders }
-      while T[2] > CylinderZMax do
-        T[2] -= (CylinderZMax - CylinderZMin);
-      while T[2] < CylinderZMin do
-        T[2] += (CylinderZMax - CylinderZMin);
+      while T.Data[2] > CylinderZMax do
+        T.Data[2] -= (CylinderZMax - CylinderZMin);
+      while T.Data[2] < CylinderZMin do
+        T.Data[2] += (CylinderZMax - CylinderZMin);
       Cylinders[X, Z].Translation := T;
     end;
 
@@ -146,7 +147,7 @@ begin
   for X := 0 to CX - 1 do
   begin
     CylinderX := Cylinders[X, 0].Translation[0];
-    if FloatsEqual(PlayerX, CylinderX, 0.1) then
+    if SameValue(PlayerX, CylinderX, 0.1) then
     begin
       Some := false;
       for Z := 0 to CZ - 1 do
@@ -157,7 +158,7 @@ begin
           Some := true;
 
           T := Player.Translation;
-          T[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
+          T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
           Player.Translation := T;
         end;
       end;
@@ -178,7 +179,7 @@ end;
 
 procedure PlayerShift(const X, Z: Single);
 begin
-  Player.Translation := Player.Translation + Vector3Single(X * XSpread / 2, 0, Z * 0.2);
+  Player.Translation := Player.Translation + Vector3(X * XSpread / 2, 0, Z * 0.2);
 end;
 
 procedure WindowPress(Container: TUIContainer; const Event: TInputPressRelease);
