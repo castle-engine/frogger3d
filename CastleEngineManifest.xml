@@ -3,7 +3,6 @@
   caption="Frogger 3D"
   qualified_name="net.sourceforge.castleengine.frogger3d"
   standalone_source="code/frogger3d.lpr"
-  android_source="code/frogger3d_android.lpr"
   screen_orientation="landscape"
   author="Michalis Kamburelis">
   <icons>
