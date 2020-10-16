@@ -28,7 +28,7 @@ implementation
 uses SysUtils, Math,
   CastleLog, CastleWindow, CastleProgress, CastleWindowProgress,
   CastleControls, CastleFilesUtils, CastleKeysMouse, CastleScene,
-  CastleUIControls, Castle3D, CastleVectors, CastleMessages, CastleColors;
+  CastleUIControls, CastleTransform, CastleVectors, CastleMessages, CastleColors;
 
 const
   CX = 12;
@@ -41,8 +41,8 @@ const
 var
   SceneManager: TGameSceneManager; //< same as Window.SceneManager, just comfortable shortcut
   CylinderScene, PlayerScene: TCastleScene;
-  Cylinders: array [0..CX-1, 0..CZ-1] of T3DTransform;
-  Player: T3DTransform;
+  Cylinders: array [0..CX-1, 0..CZ-1] of TCastleTransform;
+  Player: TCastleTransform;
 
   HelpLabel: TCastleLabel;
   CylinderZMin, CylinderZMax: Single;
@@ -77,12 +77,12 @@ begin
   SceneManager.LoadLevel('1');
 
   CylinderScene := TCastleScene.Create(SceneManager);
-  CylinderScene.Load(ApplicationData('cylinder.x3d'), true);
+  CylinderScene.Load('castle-data:/cylinder.x3d');
 
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      Cylinders[X, Z] := T3DTransform.Create(SceneManager);
+      Cylinders[X, Z] := TCastleTransform.Create(SceneManager);
       Cylinders[X, Z].Add(CylinderScene);
       Cylinders[X, Z].Translation := Vector3(
         X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
@@ -94,8 +94,8 @@ begin
   CylinderZMax := Cylinders[0, CZ - 1].Translation[2];
 
   PlayerScene := TCastleScene.Create(SceneManager);
-  PlayerScene.Load(ApplicationData('player.x3d'), true);
-  Player := T3DTransform.Create(SceneManager);
+  PlayerScene.Load('castle-data:/player.x3d');
+  Player := TCastleTransform.Create(SceneManager);
   Player.Add(PlayerScene);
   Player.Translation := Vector3(- CX * XSpread / 2 - 1, 0.5, 0);
   Player.Rotation := Vector4(0, 1, 0, -Pi / 2);
@@ -108,7 +108,7 @@ begin
   SceneManager := Window.SceneManager;
 
   Progress.UserInterface := WindowProgressInterface;
-  Levels.AddFromFile(ApplicationData('level.xml'));
+  Levels.AddFromFile('castle-data:/level.xml');
 
   HelpLabel := TCastleLabel.Create(Window);
   HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
@@ -132,7 +132,7 @@ begin
     for Z := 0 to CZ - 1 do
     begin
       T := Cylinders[X, Z].Translation;
-      T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
+      T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.SecondsPassed;
       { force the cylinder to fit in CylinderZMin/Max zone.
         This makes seemingly infinite cylinders }
       while T.Data[2] > CylinderZMax do
@@ -158,7 +158,7 @@ begin
           Some := true;
 
           T := Player.Translation;
-          T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.UpdateSecondsPassed;
+          T.Data[2] += SpeedsScale * Speeds[X] * Window.Fps.SecondsPassed;
           Player.Translation := T;
         end;
       end;
@@ -188,17 +188,17 @@ const
 var
   BorderLeft, BorderRight, BorderTop, BorderBottom: boolean;
 begin
-  if Event.IsKey(K_F5) then
+  if Event.IsKey(keyF5) then
     Window.SaveScreen(FileNameAutoInc(ApplicationName + '_screen_%d.png'));
-  if Event.IsKey(K_Escape) then
+  if Event.IsKey(keyEscape) then
     Application.Terminate;
-  if Event.IsKey(K_W) then
+  if Event.IsKey(keyW) then
     PlayerShift(0, -1);
-  if Event.IsKey(K_S) then
+  if Event.IsKey(keyS) then
     PlayerShift(0,  1);
-  if Event.IsKey(K_D) then
+  if Event.IsKey(keyD) then
     PlayerShift( 1, 0);
-  if Event.IsKey(K_A) then
+  if Event.IsKey(keyA) then
     PlayerShift(-1, 0);
 
   if Event.IsMouseButton(mbLeft) then

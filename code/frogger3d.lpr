@@ -45,18 +45,15 @@ end;
 begin
   UserConfig.Load;
 
-  Window.ShadowVolumes := true; // not necessary, this is true by default
-  Window.StencilBits := 8;
+  Window.StencilBits := 8; // needed by shadow volumes
 
   SoundEngine.ParseParameters; { after Config.Load, to be able to turn off sound }
   Window.FullScreen := true;
   Window.ParseParameters;
   Parameters.Parse(Options, @OptionProc, nil);
 
-  {$ifdef UNIX}
   { Note: do this after handling options, to handle --version first }
-  InitializeLog(Version);
-  {$endif}
+  InitializeLog;
 
   Window.OpenAndRun;
   UserConfig.Save;
