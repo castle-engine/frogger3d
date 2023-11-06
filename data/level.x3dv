@@ -21,8 +21,8 @@ SpotLight {
   location 10 30 0
   direction -1 -1 0
   intensity 0.5
-  kambiShadows TRUE
-  kambiShadowsMain TRUE
+  shadowVolumes TRUE
+  shadowVolumesMain TRUE
   # shadows TRUE
   # defaultShadowMap GeneratedShadowMap {
   #   update "ALWAYS"

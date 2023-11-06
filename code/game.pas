@@ -18,15 +18,15 @@ unit Game;
 
 interface
 
-uses CastleWindowTouch, CastlePlayer, CastleLevels, CastleCreatures;
+uses CastleWindow, CastlePlayer, CastleLevels, CastleCreatures;
 
 var
-  Window: TCastleWindowTouch;
+  Window: TCastleWindow;
 
 implementation
 
 uses SysUtils, Math,
-  CastleLog, CastleWindow, CastleProgress, CastleWindowProgress,
+  CastleLog, CastleViewport,
   CastleControls, CastleFilesUtils, CastleKeysMouse, CastleScene,
   CastleUIControls, CastleTransform, CastleVectors, CastleMessages, CastleColors;
 
@@ -39,7 +39,7 @@ const
   ZSpread = 4;
 
 var
-  SceneManager: TGameSceneManager; //< same as Window.SceneManager, just comfortable shortcut
+  Viewport: TGameSceneManager;
   CylinderScene, PlayerScene: TCastleScene;
   Cylinders: array [0..CX-1, 0..CZ-1] of TCastleTransform;
   Player: TCastleTransform;
@@ -69,48 +69,52 @@ var
 begin
   GameEnd;
 
-  FpsPlayer := TPlayer.Create(SceneManager);
-  SceneManager.Items.Add(FpsPlayer);
-  SceneManager.Player := FpsPlayer;
+  FpsPlayer := TPlayer.Create(Viewport);
+  Viewport.Items.Add(FpsPlayer);
+  Viewport.Player := FpsPlayer;
   FpsPlayer.Blocked := true; // do not allow to move player in this game
 
-  SceneManager.LoadLevel('1');
+  Viewport.LoadLevel('1');
 
-  CylinderScene := TCastleScene.Create(SceneManager);
+  CylinderScene := TCastleScene.Create(Viewport);
   CylinderScene.Load('castle-data:/cylinder.x3d');
 
   for X := 0 to CX - 1 do
     for Z := 0 to CZ - 1 do
     begin
-      Cylinders[X, Z] := TCastleTransform.Create(SceneManager);
+      Cylinders[X, Z] := TCastleTransform.Create(Viewport);
       Cylinders[X, Z].Add(CylinderScene);
       Cylinders[X, Z].Translation := Vector3(
         X * XSpread - CX * XSpread / 2, 0, Z * ZSpread - 50);
-      SceneManager.Items.Add(Cylinders[X, Z]);
+      Viewport.Items.Add(Cylinders[X, Z]);
     end;
 
   { initial cylinder min/max define the span where cylinders can be in z }
   CylinderZMin := Cylinders[0,      0].Translation[2];
   CylinderZMax := Cylinders[0, CZ - 1].Translation[2];
 
-  PlayerScene := TCastleScene.Create(SceneManager);
+  PlayerScene := TCastleScene.Create(Viewport);
   PlayerScene.Load('castle-data:/player.x3d');
-  Player := TCastleTransform.Create(SceneManager);
+  Player := TCastleTransform.Create(Viewport);
   Player.Add(PlayerScene);
   Player.Translation := Vector3(- CX * XSpread / 2 - 1, 0.5, 0);
   Player.Rotation := Vector4(0, 1, 0, -Pi / 2);
-  SceneManager.Items.Add(Player);
+  Viewport.Items.Add(Player);
 end;
 
 { One-time initialization. }
 procedure ApplicationInitialize;
 begin
-  SceneManager := Window.SceneManager;
+  Viewport := TGameSceneManager.Create(Application);
+  Viewport.FullSize := true;
+  Window.Controls.InsertFront(Viewport);
 
-  Progress.UserInterface := WindowProgressInterface;
+  // headlight test
+  //Viewport.Camera.Add(TCastleDirectionalLight.Create(Application));
+
   Levels.AddFromFile('castle-data:/level.xml');
 
-  HelpLabel := TCastleLabel.Create(Window);
+  HelpLabel := TCastleLabel.Create(Application);
   HelpLabel.Text.Text := 'Move using AWSD keys or clicking/touching at window edges.';
   HelpLabel.Frame := false;
   HelpLabel.Color := Red;
@@ -201,7 +205,7 @@ begin
   if Event.IsKey(keyA) then
     PlayerShift(-1, 0);
 
-  if Event.IsMouseButton(mbLeft) then
+  if Event.IsMouseButton(buttonLeft) then
   begin
     BorderLeft   := Event.Position[0] < BorderArea * Container.Width;
     BorderRight  := Event.Position[0] > Container.Width - BorderArea * Container.Width;
@@ -231,7 +235,7 @@ initialization
   Application.OnInitialize := @ApplicationInitialize;
 
   { create Window and initialize Window callbacks }
-  Window := TCastleWindowTouch.Create(Application);
+  Window := TCastleWindow.Create(Application);
   Window.OnPress := @WindowPress;
   Window.OnUpdate := @WindowUpdate;
   Window.FpsShowOnCaption := true;
